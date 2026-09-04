@@ -1,0 +1,159 @@
+model Organization {
+  id          String           @id @default(uuid(7))
+  name        String
+  slug        String           @unique
+  plan        SubscriptionPlan @default(FREE)
+  isDeleted   Boolean          @default(false)
+  deletedAt   DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  users         User[]
+  projects      Project[]
+  subscriptions Subscription[]
+
+  @@index([slug], name: "idx_organization_slug")
+  @@index([isDeleted], name: "idx_organization_isDeleted")
+  @@map("organizations")
+}
+
+model Project {
+  id             String        @id @default(uuid(7))
+  name           String
+  description    String?
+  status         ProjectStatus @default(ACTIVE)
+  isDeleted      Boolean       @default(false)
+  deletedAt      DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  organizationId String
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  sprints        Sprint[]
+  tasks          Task[]
+
+  @@index([organizationId], name: "idx_project_organizationId")
+  @@index([status], name: "idx_project_status")
+  @@index([isDeleted], name: "idx_project_isDeleted")
+  @@map("projects")
+}
+
+model Sprint {
+  id        String       @id @default(uuid(7))
+  name      String
+  goal      String?
+  status    SprintStatus @default(UPCOMING)
+  startDate DateTime
+  endDate   DateTime
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  projectId String
+  project   Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  tasks     Task[]
+
+  @@index([projectId], name: "idx_sprint_projectId")
+  @@index([status], name: "idx_sprint_status")
+  @@map("sprints")
+}
+
+model Task {
+  id          String     @id @default(uuid(7))
+  title       String
+  description String?
+  status      TaskStatus @default(TODO)
+  priority    Priority   @default(MEDIUM)
+  isDeleted   Boolean    @default(false)
+  deletedAt   DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  projectId  String
+  project    Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  sprintId   String?
+  sprint     Sprint?     @relation(fields: [sprintId], references: [id], onDelete: SetNull)
+
+  assigneeId String?
+  assignee   User?       @relation("AssignedTasks", fields: [assigneeId], references: [id], onDelete: SetNull)
+
+  subtasks   Subtask[]
+  comments   Comment[]
+  activities ActivityLog[]
+
+  @@index([projectId], name: "idx_task_projectId")
+  @@index([assigneeId], name: "idx_task_assigneeId")
+  @@index([status], name: "idx_task_status")
+  @@index([priority], name: "idx_task_priority")
+  @@index([isDeleted], name: "idx_task_isDeleted")
+  @@map("tasks")
+}
+
+model Subtask {
+  id        String   @id @default(uuid(7))
+  title     String
+  isDone    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId], name: "idx_subtask_taskId")
+  @@map("subtasks")
+}
+
+model Comment {
+  id        String   @id @default(uuid(7))
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([taskId], name: "idx_comment_taskId")
+  @@index([userId], name: "idx_comment_userId")
+  @@map("comments")
+}
+
+model ActivityLog {
+  id        String   @id @default(uuid(7))
+  action    String
+  details   String?
+  createdAt DateTime @default(now())
+
+  taskId    String?
+  task      Task?    @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([taskId], name: "idx_activity_taskId")
+  @@index([userId], name: "idx_activity_userId")
+  @@map("activity_logs")
+}
+
+model Subscription {
+  id             String           @id @default(uuid(7))
+  amount         Float
+  currency       String           @default("USD")
+  plan           SubscriptionPlan
+  status         PaymentStatus    @default(PENDING)
+  gateway        PaymentGateway
+  transactionId  String           @unique
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  organizationId String
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId], name: "idx_subscription_organizationId")
+  @@index([status], name: "idx_subscription_status")
+  @@map("subscriptions")
+}
