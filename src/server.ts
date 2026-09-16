@@ -7,27 +7,27 @@ import { seedAdmin, seedManager, seedMember } from "./app/utils/seed";
 const PORT = config.port;
 
 const main = async () => {
-  try {
-    await prisma.$connect();
-    console.log("Connected to the database successfully.");
+	try {
+		await prisma.$connect();
+		console.log("Connected to the database successfully.");
 
-    await redisClient.connect();
-    console.log("Redis Connected Successfully");
+		await redisClient.connect();
+		console.log("Redis Connected Successfully");
 
-    await seedAdmin();
-    await seedManager();
-    await seedMember();
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
-  } catch (error) {
-    console.error("Error starting the server:", error);
-    await prisma.$disconnect();
-    if (redisClient.isOpen) {
-      await redisClient.disconnect();
-    }
-    process.exit(1);
-  }
+		await seedAdmin();
+		await seedManager();
+		await seedMember();
+		app.listen(PORT, () => {
+			console.log(`Server is running on port ${PORT}`);
+		});
+	} catch (error) {
+		console.error("Error starting the server:", error);
+		await prisma.$disconnect();
+		if (redisClient.isOpen) {
+			await redisClient.disconnect();
+		}
+		process.exit(1);
+	}
 };
 
 main();

@@ -31,7 +31,6 @@ const registerUser = async (payload: IRegisterUserPayload) => {
 
 	const hashedPassword = await bcrypt.hash(password, 8);
 
-	// If Organization Name is provided, create Organization or connect
 	let organizationId: string | undefined;
 	if (organizationName) {
 		const slug = organizationName.toLowerCase().replace(/\s+/g, "-");
@@ -72,13 +71,13 @@ const registerUser = async (payload: IRegisterUserPayload) => {
 	const accessToken = jwtUtils.createToken(
 		jwtPayload,
 		config.jwt_access_secret,
-		config.jwt_access_expires_in as SignOptions,
+		config.jwt_access_expires_in as SignOptions["expiresIn"],
 	);
 
 	const refreshToken = jwtUtils.createToken(
 		jwtPayload,
 		config.jwt_refresh_secret,
-		config.jwt_refresh_expires_in as SignOptions,
+		config.jwt_refresh_expires_in as SignOptions["expiresIn"],
 	);
 
 	return {
@@ -134,13 +133,13 @@ const loginUser = async (payload: ILoginUserPayload) => {
 	const accessToken = jwtUtils.createToken(
 		jwtPayload,
 		config.jwt_access_secret,
-		config.jwt_access_expires_in as SignOptions,
+		config.jwt_access_expires_in as SignOptions["expiresIn"],
 	);
 
 	const refreshToken = jwtUtils.createToken(
 		jwtPayload,
 		config.jwt_refresh_secret,
-		config.jwt_refresh_expires_in as SignOptions,
+		config.jwt_refresh_expires_in as SignOptions["expiresIn"],
 	);
 
 	const { password: _, ...userWithoutPassword } = user;
@@ -211,13 +210,13 @@ const refreshToken = async (token: string) => {
 	const accessToken = jwtUtils.createToken(
 		jwtPayload,
 		config.jwt_access_secret,
-		config.jwt_access_expires_in as SignOptions,
+		config.jwt_access_expires_in as SignOptions["expiresIn"],
 	);
 
 	const newRefreshToken = jwtUtils.createToken(
 		jwtPayload,
 		config.jwt_refresh_secret,
-		config.jwt_refresh_expires_in as SignOptions,
+		config.jwt_refresh_expires_in as SignOptions["expiresIn"],
 	);
 
 	return {
@@ -263,7 +262,7 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
 			},
 		});
 	} else if (!user.googleId) {
-		// Existing user connecting Google Auth
+		// user connecting Google Auth
 		user = await prisma.user.update({
 			where: { id: user.id },
 			data: { googleId: googleIdTokenPayload.sub },
@@ -289,13 +288,13 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
 	const accessToken = jwtUtils.createToken(
 		jwtPayload,
 		config.jwt_access_secret,
-		config.jwt_access_expires_in as SignOptions,
+		config.jwt_access_expires_in as SignOptions["expiresIn"],
 	);
 
 	const refreshToken = jwtUtils.createToken(
 		jwtPayload,
 		config.jwt_refresh_secret,
-		config.jwt_refresh_expires_in as SignOptions,
+		config.jwt_refresh_expires_in as SignOptions["expiresIn"],
 	);
 
 	const { password: _, ...userWithoutPassword } = user;
