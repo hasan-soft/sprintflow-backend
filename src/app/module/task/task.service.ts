@@ -1,7 +1,4 @@
-import type {
-	Prisma,
-	TaskStatus,
-} from "../../../generated/prisma/client";
+import type { Prisma, TaskStatus } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 import type { ICreateTaskPayload, ITaskFilterQuery } from "./task.interface";
 

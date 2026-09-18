@@ -36,4 +36,10 @@ export default {
 	redis_password: process.env.REDIS_PASSWORD || "",
 	redis_host: process.env.REDIS_HOST || "",
 	redis_port: process.env.REDIS_PORT || "12624",
+
+	// Stripe & Client URL
+	stripe_api_secret:
+		process.env.STRIPE_SECRET_KEY || process.env.STRIPE_API_SECRET,
+	stripe_webhook_secret: process.env.STRIPE_WEBHOOK_SECRET,
+	client_url: process.env.FRONTEND_URL || process.env.CLIENT_URL,
 };
