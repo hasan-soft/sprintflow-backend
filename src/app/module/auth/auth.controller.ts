@@ -119,6 +119,27 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
 	});
 });
 
+const logout = catchAsync(async (req: Request, res: Response) => {
+	res.clearCookie("accessToken", {
+		httpOnly: true,
+		secure: process.env.NODE_ENV === "production",
+		sameSite: "none",
+	});
+
+	res.clearCookie("refreshToken", {
+		httpOnly: true,
+		secure: process.env.NODE_ENV === "production",
+		sameSite: "none",
+	});
+
+	sendResponse(res, {
+		statusCode: httpStatus.OK,
+		success: true,
+		message: "Logged out successfully",
+		data: {},
+	});
+});
+
 const googleLogin = catchAsync(async (req: Request, res: Response) => {
 	const payload = req.body;
 	const result = await AuthService.googleLogin(payload);
@@ -156,4 +177,5 @@ export const AuthController = {
 	getMe,
 	refreshToken,
 	googleLogin,
+	logout,
 };

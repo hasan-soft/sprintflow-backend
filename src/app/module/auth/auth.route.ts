@@ -33,4 +33,10 @@ router.post(
 	AuthController.googleLogin,
 );
 
+router.post(
+	"/logout",
+	auth(Role.ADMIN, Role.MANAGER, Role.MEMBER),
+	AuthController.logout,
+);
+
 export const AuthRoutes = router;
