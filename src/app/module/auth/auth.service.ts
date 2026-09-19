@@ -18,73 +18,73 @@ import type {
 } from "./auth.interface";
 
 const registerUser = async (payload: IRegisterUserPayload) => {
-	const { name, password, role, organizationName } = payload;
-	const email = payload.email.trim().toLowerCase();
+  const { name, password, organizationName } = payload;
+  const email = payload.email.trim().toLowerCase();
 
-	const isUserExists = await prisma.user.findUnique({
-		where: { email },
-	});
+  const isUserExists = await prisma.user.findUnique({
+    where: { email },
+  });
 
-	if (isUserExists) {
-		throw new Error("User with this email already exists");
-	}
+  if (isUserExists) {
+    throw new Error("User with this email already exists");
+  }
 
-	const hashedPassword = await bcrypt.hash(password, 8);
+  const hashedPassword = await bcrypt.hash(password, 8);
 
-	let organizationId: string | undefined;
-	if (organizationName) {
-		const slug = organizationName.toLowerCase().replace(/\s+/g, "-");
-		const organization = await prisma.organization.upsert({
-			where: { slug },
-			update: {},
-			create: {
-				name: organizationName,
-				slug,
-			},
-		});
-		organizationId = organization.id;
-	}
+  let organizationId: string | undefined;
+  if (organizationName) {
+    const slug = organizationName.toLowerCase().replace(/\s+/g, "-");
+    const organization = await prisma.organization.upsert({
+      where: { slug },
+      update: {},
+      create: {
+        name: organizationName,
+        slug,
+      },
+    });
+    organizationId = organization.id;
+  }
 
-	const createdUser = await prisma.user.create({
-		data: {
-			name,
-			email,
-			password: hashedPassword,
-			role: role || Role.MEMBER,
-			status: UserStatus.ACTIVE,
-			authProvider: AuthProvider.CREDENTIAL,
-			emailVerified: true,
-			organizationId,
-		},
-		omit: { password: true },
-		include: { organization: true },
-	});
+  const createdUser = await prisma.user.create({
+    data: {
+      name,
+      email,
+      password: hashedPassword,
+      role: Role.MEMBER,
+      status: UserStatus.ACTIVE,
+      authProvider: AuthProvider.CREDENTIAL,
+      emailVerified: true,
+      organizationId,
+    },
+    omit: { password: true },
+    include: { organization: true },
+  });
 
-	const jwtPayload = {
-		userId: createdUser.id,
-		name: createdUser.name,
-		email: createdUser.email,
-		role: createdUser.role,
-		organizationId: createdUser.organizationId,
-	};
+  const jwtPayload = {
+    userId: createdUser.id,
+    name: createdUser.name,
+    email: createdUser.email,
+    role: createdUser.role,
+    organizationId: createdUser.organizationId,
+  };
 
-	const accessToken = jwtUtils.createToken(
-		jwtPayload,
-		config.jwt_access_secret,
-		config.jwt_access_expires_in as SignOptions["expiresIn"],
-	);
+  const accessToken = jwtUtils.createToken(
+    jwtPayload,
+    config.jwt_access_secret,
+    config.jwt_access_expires_in as SignOptions["expiresIn"],
+  );
 
-	const refreshToken = jwtUtils.createToken(
-		jwtPayload,
-		config.jwt_refresh_secret,
-		config.jwt_refresh_expires_in as SignOptions["expiresIn"],
-	);
+  const refreshToken = jwtUtils.createToken(
+    jwtPayload,
+    config.jwt_refresh_secret,
+    config.jwt_refresh_expires_in as SignOptions["expiresIn"],
+  );
 
-	return {
-		user: createdUser,
-		accessToken,
-		refreshToken,
-	};
+  return {
+    user: createdUser,
+    accessToken,
+    refreshToken,
+  };
 };
 
 const loginUser = async (payload: ILoginUserPayload) => {
