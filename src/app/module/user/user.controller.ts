@@ -40,14 +40,15 @@ const updateProfile = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
-	const result = await UserService.getAllUsersFromDB();
+  const result = await UserService.getAllUsersFromDB(req.query);
 
-	sendResponse(res, {
-		statusCode: httpStatus.OK,
-		success: true,
-		message: "Users fetched successfully",
-		data: result,
-	});
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Users fetched successfully",
+    meta: result.meta,
+    data: result.data,
+  });
 });
 
 const updateUserRole = catchAsync(async (req: Request, res: Response) => {
