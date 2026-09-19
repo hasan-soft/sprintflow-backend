@@ -28,25 +28,25 @@ const updateTaskStatusValidationSchema = z.object({
 });
 
 const updateTaskValidationSchema = z.object({
-  body: z.object({
-    title: z.string().min(1, "Title is required").optional(),
-    description: z.string().optional(),
-    priority: z
-      .enum([Priority.LOW, Priority.MEDIUM, Priority.HIGH, Priority.URGENT])
-      .optional(),
-    sprintId: z.string().uuid().optional().nullable(),
-  }),
+	body: z.object({
+		title: z.string().min(1, "Title is required").optional(),
+		description: z.string().optional(),
+		priority: z
+			.enum([Priority.LOW, Priority.MEDIUM, Priority.HIGH, Priority.URGENT])
+			.optional(),
+		sprintId: z.string().uuid().optional().nullable(),
+	}),
 });
 
 const assignTaskValidationSchema = z.object({
-  body: z.object({
-    assigneeId: z.string().uuid("Invalid assignee ID"),
-  }),
+	body: z.object({
+		assigneeId: z.string().uuid("Invalid assignee ID"),
+	}),
 });
 
 export const TaskValidation = {
-  createTaskValidationSchema,
-  updateTaskStatusValidationSchema,
-  updateTaskValidationSchema,
-  assignTaskValidationSchema,
+	createTaskValidationSchema,
+	updateTaskStatusValidationSchema,
+	updateTaskValidationSchema,
+	assignTaskValidationSchema,
 };

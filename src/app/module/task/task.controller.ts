@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import httpStatus from "http-status";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
+import type { IRequestUser } from "../auth/auth.interface";
 import { TaskService } from "./task.service";
 
 const createTask = catchAsync(async (req: Request, res: Response) => {
@@ -48,82 +49,83 @@ const softDeleteTask = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getSingleTask = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
+	const { id } = req.params;
 
-  const result = await TaskService.getSingleTask(id);
+	const result = await TaskService.getSingleTask(id);
 
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Task retrieved successfully",
-    data: result,
-  });
+	sendResponse(res, {
+		statusCode: httpStatus.OK,
+		success: true,
+		message: "Task retrieved successfully",
+		data: result,
+	});
 });
 
 const updateTask = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const payload = req.body;
+	const { id } = req.params;
+	const payload = req.body;
+	const user = req.user as unknown as IRequestUser;
 
-  const result = await TaskService.updateTask(id, payload);
+	const result = await TaskService.updateTask(id, payload, user.userId);
 
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Task updated successfully",
-    data: result,
-  });
+	sendResponse(res, {
+		statusCode: httpStatus.OK,
+		success: true,
+		message: "Task updated successfully",
+		data: result,
+	});
 });
 
 const getMyAssignedTasks = catchAsync(async (req: Request, res: Response) => {
-  const user = req.user as unknown as IRequestUser;
+	const user = req.user as unknown as IRequestUser;
 
-  const result = await TaskService.getMyAssignedTasks(user.userId);
+	const result = await TaskService.getMyAssignedTasks(user.userId);
 
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Assigned tasks retrieved successfully",
-    data: result,
-  });
+	sendResponse(res, {
+		statusCode: httpStatus.OK,
+		success: true,
+		message: "Assigned tasks retrieved successfully",
+		data: result,
+	});
 });
 
 const assignTask = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { assigneeId } = req.body;
-  const user = req.user as unknown as IRequestUser;
+	const { id } = req.params;
+	const { assigneeId } = req.body;
+	const user = req.user as unknown as IRequestUser;
 
-  const result = await TaskService.assignTask(id, assigneeId, user.userId);
+	const result = await TaskService.assignTask(id, assigneeId, user.userId);
 
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Task assigned successfully",
-    data: result,
-  });
+	sendResponse(res, {
+		statusCode: httpStatus.OK,
+		success: true,
+		message: "Task assigned successfully",
+		data: result,
+	});
 });
 
 const unassignTask = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const user = req.user as unknown as IRequestUser;
+	const { id } = req.params;
+	const user = req.user as unknown as IRequestUser;
 
-  const result = await TaskService.unassignTask(id, user.userId);
+	const result = await TaskService.unassignTask(id, user.userId);
 
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Task unassigned successfully",
-    data: result,
-  });
+	sendResponse(res, {
+		statusCode: httpStatus.OK,
+		success: true,
+		message: "Task unassigned successfully",
+		data: result,
+	});
 });
 
 export const TaskController = {
-  createTask,
-  getAllTasks,
-  updateTaskStatus,
-  softDeleteTask,
-  getSingleTask,
-  updateTask,
-  getMyAssignedTasks,
-  assignTask,
-  unassignTask,
+	createTask,
+	getAllTasks,
+	updateTaskStatus,
+	softDeleteTask,
+	getSingleTask,
+	updateTask,
+	getMyAssignedTasks,
+	assignTask,
+	unassignTask,
 };

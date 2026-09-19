@@ -1,4 +1,8 @@
-import type { Prisma, TaskStatus } from "../../../generated/prisma/client";
+import type {
+	Prisma,
+	Priority,
+	TaskStatus,
+} from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 import type { ICreateTaskPayload, ITaskFilterQuery } from "./task.interface";
 
@@ -164,9 +168,10 @@ const updateTask = async (
 	payload: {
 		title?: string;
 		description?: string;
-		priority?: string;
+		priority?: Priority;
 		sprintId?: string | null;
 	},
+	userId: string,
 ) => {
 	const task = await prisma.task.findFirst({
 		where: {
@@ -214,7 +219,7 @@ const updateTask = async (
 		await tx.activityLog.create({
 			data: {
 				taskId: taskId,
-				userId: "system",
+				userId: userId,
 				action: "Task Updated",
 				details: JSON.stringify({ changes: payload }),
 			},
@@ -380,13 +385,13 @@ const unassignTask = async (taskId: string, unassignedById: string) => {
 };
 
 export const TaskService = {
-  createTask,
-  getAllTasks,
-  updateTaskStatus,
-  softDeleteTask,
-  getSingleTask,
-  updateTask,
-  getMyAssignedTasks,
-  assignTask,
-  unassignTask,
+	createTask,
+	getAllTasks,
+	updateTaskStatus,
+	softDeleteTask,
+	getSingleTask,
+	updateTask,
+	getMyAssignedTasks,
+	assignTask,
+	unassignTask,
 };
