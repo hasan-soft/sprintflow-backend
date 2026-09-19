@@ -7,19 +7,30 @@ import type {
 } from "./project.interface";
 
 const createProject = async (payload: ICreateProjectPayload) => {
-	const project = await prisma.project.create({
-		data: {
-			name: payload.name,
-			description: payload.description,
-			organizationId: payload.organizationId,
-			status: (payload.status || "ACTIVE") as ProjectStatus,
-		},
-		include: {
-			organization: true,
-		},
-	});
+	return await prisma.$transaction(async (tx) => {
+		// Create Project
+		const project = await tx.project.create({
+			data: {
+				name: payload.name,
+				description: payload.description,
+				organizationId: payload.organizationId,
+				status: (payload.status || "ACTIVE") as ProjectStatus,
+			},
+			include: {
+				organization: true,
+			},
+		});
+		await tx.sprint.create({
+			data: {
+				name: `${payload.name} - Sprint 1`,
+				projectId: project.id,
+				startDate: new Date(),
+				endDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+			},
+		});
 
-	return project;
+		return project;
+	});
 };
 
 const getAllProjects = async (query: IProjectFilterQuery) => {

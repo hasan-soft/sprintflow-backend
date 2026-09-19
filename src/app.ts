@@ -5,15 +5,35 @@ import express, {
 	type Request,
 	type Response,
 } from "express";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 import httpStatus from "http-status";
 import config from "./app/config";
 import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
 import { notFound } from "./app/middleware/notFound";
+
 import { AuthRoutes } from "./app/module/auth/auth.route";
 import { PaymentRoutes } from "./app/module/payment/payment.route";
 import { CommentRoutes } from "./app/module/comment/comment.route";
 
+import { UserRoutes } from "./app/module/user/user.route";
+import { ProjectRoutes } from "./app/module/project/project.route";
+import { SprintRoutes } from "./app/module/sprint/sprint.route";
+import { TaskRoutes } from "./app/module/task/task.route";
+
 const app: Application = express();
+
+app.use(helmet());
+
+const limiter = rateLimit({
+	windowMs: 15 * 60 * 1000,
+	max: 100,
+	message: {
+		success: false,
+		message: "Too many requests from this IP, please try again later.",
+	},
+});
+app.use("/api", limiter);
 
 app.use(
 	cors({
@@ -22,14 +42,17 @@ app.use(
 	}),
 );
 
-// Enable URL-encoded form data parsing
 app.use(express.urlencoded({ extended: true }));
 
-// Middleware to parse JSON bodies
+// Middleware
 app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/v1/auth", AuthRoutes);
+app.use("/api/v1/users", UserRoutes);
+app.use("/api/v1/projects", ProjectRoutes);
+app.use("/api/v1/sprints", SprintRoutes);
+app.use("/api/v1/tasks", TaskRoutes);
 app.use("/api/v1/payments", PaymentRoutes);
 app.use("/api/v1/comments", CommentRoutes);
 
@@ -41,6 +64,7 @@ app.get("/", async (req: Request, res: Response) => {
 	});
 });
 
+// Error Handler Middlewares
 app.use(globalErrorHandler);
 app.use(notFound);
 
