@@ -1,16 +1,16 @@
 import type { Role } from "../../../generated/prisma/client";
 
 export interface IUpdateUserPayload {
-  name?: string;
+	name?: string;
 }
 
 export interface IUpdateUserRolePayload {
-  role: Role;
+	role: Role;
 }
 
 export interface IUserFilterQuery {
-  page?: string;
-  limit?: string;
-  role?: Role;
-  searchTerm?: string;
+	page?: string;
+	limit?: string;
+	role?: Role;
+	searchTerm?: string;
 }
