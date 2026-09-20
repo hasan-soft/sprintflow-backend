@@ -1,9 +1,9 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, {
-    type Application,
-    type Request,
-    type Response,
+	type Application,
+	type Request,
+	type Response,
 } from "express";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
