@@ -452,8 +452,8 @@ PORT=5000
 ##  **Demo Credentials**
 
 ```
-Email: admin@example.com
-Password: Admin@123456
+Email: admin@gmail.com
+Password: admin@1234
 Role: ADMIN
 ```
 
@@ -503,18 +503,19 @@ prisma/
 ##  ** Links **
 
 ```
-Project Name: 
+Project Name : SprintFlow - Project Management SaaS
 
-Backend Repo: 
+Backend Repo : https://github.com/hasan-soft/sprintflow-backend
 
-Live API: 
+Live API : https://sprintflow-backend.vercel.app/
 
-API Docs: 
+API Docs : https://documenter.getpostman.com/view/54816513/2sBYB2rnPr
 
+Demo Video : https://drive.google.com/file/d/10VSSjauKoezalerlEbTBA7MKm55CRCoz/view
 
-Admin Email: 
+Admin Email : admin@gmail.com
 
-Admin Password: 
+Admin Password : admin@1234 
 ```
 
 ---
