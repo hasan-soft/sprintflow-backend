@@ -16,6 +16,9 @@ export default {
 	jwt_refresh_expires_in: process.env.JWT_REFRESH_EXPIRES_IN || "365d",
 	google_client_id: process.env.GOOGLE_CLIENT_ID || "",
 
+	// Gemini API Key
+	gemini_api_key: process.env.GEMINI_API_KEY || "",
+
 	// Admin Credential
 	admin_name: process.env.ADMIN_NAME || "Admin",
 	admin_email: process.env.ADMIN_EMAIL || "admin@gmail.com",

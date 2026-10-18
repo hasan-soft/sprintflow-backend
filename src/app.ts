@@ -22,6 +22,7 @@ import { SprintRoutes } from "./app/module/sprint/sprint.route";
 import { SubtaskRoutes } from "./app/module/subtask/subtask.route";
 import { TaskRoutes } from "./app/module/task/task.route";
 import { UserRoutes } from "./app/module/user/user.route";
+import { AIRoutes } from "./app/module/ai/ai.route";
 
 const app: Application = express();
 
@@ -64,6 +65,7 @@ app.use("/api/v1/tasks", TaskRoutes);
 app.use("/api/v1/subtasks", SubtaskRoutes);
 app.use("/api/v1/payments", PaymentRoutes);
 app.use("/api/v1/comments", CommentRoutes);
+app.use("/api/v1/ai", AIRoutes);
 
 // Basic route
 app.get("/", async (req: Request, res: Response) => {
