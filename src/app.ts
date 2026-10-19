@@ -11,18 +11,16 @@ import httpStatus from "http-status";
 import config from "./app/config";
 import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
 import { notFound } from "./app/middleware/notFound";
-
+import { AIRoutes } from "./app/module/ai/ai.route";
 import { AuthRoutes } from "./app/module/auth/auth.route";
 import { CommentRoutes } from "./app/module/comment/comment.route";
 import { PaymentController } from "./app/module/payment/payment.controller";
 import { PaymentRoutes } from "./app/module/payment/payment.route";
-
 import { ProjectRoutes } from "./app/module/project/project.route";
 import { SprintRoutes } from "./app/module/sprint/sprint.route";
 import { SubtaskRoutes } from "./app/module/subtask/subtask.route";
 import { TaskRoutes } from "./app/module/task/task.route";
 import { UserRoutes } from "./app/module/user/user.route";
-import { AIRoutes } from "./app/module/ai/ai.route";
 
 const app: Application = express();
 

@@ -1,6 +1,6 @@
 import type {
-	Prisma,
 	Priority,
+	Prisma,
 	TaskStatus,
 } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";

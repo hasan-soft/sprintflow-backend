@@ -1,7 +1,7 @@
 import express from "express";
-import { UserController } from "./user.controller";
-import { auth } from "../../middleware/checkAuth";
 import { Role } from "../../../generated/prisma/client";
+import { auth } from "../../middleware/checkAuth";
+import { UserController } from "./user.controller";
 
 const router = express.Router();
 
@@ -24,5 +24,11 @@ router.get("/", auth(Role.ADMIN, Role.MANAGER), UserController.getAllUsers);
 router.patch("/:id/role", auth(Role.ADMIN), UserController.updateUserRole);
 
 router.get("/admin/stats", auth(Role.ADMIN), UserController.getAdminStats);
+router.get("/admin/logs", auth(Role.ADMIN), UserController.getAuditLogs);
+router.get(
+	"/me/activities",
+	auth(Role.ADMIN, Role.MANAGER, Role.MEMBER),
+	UserController.getMyActivities,
+);
 
 export const UserRoutes = router;

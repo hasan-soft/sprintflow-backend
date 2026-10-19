@@ -105,10 +105,40 @@ const getAdminStatsFromDB = async () => {
 	};
 };
 
+const getAuditLogsFromDB = async () => {
+	return await prisma.activityLog.findMany({
+		take: 50,
+		orderBy: { createdAt: "desc" },
+		include: {
+			user: {
+				select: { id: true, name: true, email: true, role: true },
+			},
+			task: {
+				select: { id: true, title: true },
+			},
+		},
+	});
+};
+
+const getMyActivitiesFromDB = async (userId: string) => {
+	return await prisma.activityLog.findMany({
+		where: { userId },
+		take: 50,
+		orderBy: { createdAt: "desc" },
+		include: {
+			task: {
+				select: { id: true, title: true },
+			},
+		},
+	});
+};
+
 export const UserService = {
 	getProfileFromDB,
 	updateProfileInDB,
 	getAllUsersFromDB,
 	updateUserRoleInDB,
 	getAdminStatsFromDB,
+	getAuditLogsFromDB,
+	getMyActivitiesFromDB,
 };

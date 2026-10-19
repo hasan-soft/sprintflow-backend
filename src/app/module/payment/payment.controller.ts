@@ -45,9 +45,20 @@ const getPaymentStatus = catchAsync(async (req: Request, res: Response) => {
 	});
 });
 
+const getAllSubscriptions = catchAsync(async (req: Request, res: Response) => {
+	const result = await PaymentService.getAllSubscriptions();
+	sendResponse(res, {
+		statusCode: httpStatus.OK,
+		success: true,
+		message: "Subscriptions history fetched successfully",
+		data: result,
+	});
+});
+
 export const PaymentController = {
 	initiatePayment,
 	confirmPayment,
 	handleWebhook,
 	getPaymentStatus,
+	getAllSubscriptions,
 };

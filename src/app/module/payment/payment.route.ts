@@ -18,6 +18,12 @@ router.post(
 );
 
 router.get(
+	"/subscriptions",
+	auth(Role.ADMIN, Role.MANAGER),
+	PaymentController.getAllSubscriptions,
+);
+
+router.get(
 	"/:id",
 	auth(Role.ADMIN, Role.MANAGER),
 	PaymentController.getPaymentStatus,

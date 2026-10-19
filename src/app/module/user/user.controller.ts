@@ -75,10 +75,33 @@ const getAdminStats = catchAsync(async (req: Request, res: Response) => {
 	});
 });
 
+const getAuditLogs = catchAsync(async (req: Request, res: Response) => {
+	const result = await UserService.getAuditLogsFromDB();
+	sendResponse(res, {
+		statusCode: httpStatus.OK,
+		success: true,
+		message: "Audit logs fetched successfully",
+		data: result,
+	});
+});
+
+const getMyActivities = catchAsync(async (req: Request, res: Response) => {
+	const userId = (req as CustomRequest).user?.userId as string;
+	const result = await UserService.getMyActivitiesFromDB(userId);
+	sendResponse(res, {
+		statusCode: httpStatus.OK,
+		success: true,
+		message: "Member activities fetched successfully",
+		data: result,
+	});
+});
+
 export const UserController = {
 	getProfile,
 	updateProfile,
 	getAllUsers,
 	updateUserRole,
 	getAdminStats,
+	getAuditLogs,
+	getMyActivities,
 };

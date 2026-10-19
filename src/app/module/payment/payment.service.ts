@@ -171,9 +171,19 @@ const getPaymentStatus = async (id: string) => {
 	return subscription;
 };
 
+const getAllSubscriptions = async () => {
+	return await prisma.subscription.findMany({
+		orderBy: { createdAt: "desc" },
+		include: {
+			organization: true,
+		},
+	});
+};
+
 export const PaymentService = {
 	initiatePayment,
 	confirmPayment,
 	handleStripeWebhook,
 	getPaymentStatus,
+	getAllSubscriptions,
 };
